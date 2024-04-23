@@ -21,7 +21,7 @@ class Supplier(models.Model):
 
 class Supply(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, verbose_name='Поставщик')
-    product = models.ManyToManyField('MusicInstrument', through='Pos_supply', verbose_name='Музыкальный инструмент')
+    product = models.ManyToManyField('Tool', through='Pos_supply', verbose_name='Строительный инструмент')
 
     def __str__(self):
         return f"{self.pk}-{self.supplier.name}"
@@ -32,9 +32,9 @@ class Supply(models.Model):
 
 class Pos_supply(models.Model):
     supply = models.ForeignKey(Supply, on_delete=models.PROTECT, verbose_name='Поставка')
-    product = models.ForeignKey('MusicInstrument', on_delete=models.PROTECT, verbose_name='Музыкальный инструмент')
+    product = models.ForeignKey('Tool', on_delete=models.PROTECT, verbose_name='Строительный инструмент')
 
-    count = models.PositiveIntegerField(verbose_name='Кол-во книг')
+    count = models.PositiveIntegerField(verbose_name='Кол-во товара')
 
     def __str__(self):
         return f"{self.product.name}:{self.count} {self.supply}"
@@ -76,7 +76,7 @@ class Order(models.Model):
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания заказа')
     datetime_finish = models.DateTimeField(null=True, blank=True, verbose_name='Время завершения заказа')
 
-    product = models.ManyToManyField('MusicInstrument', through='Pos_order', verbose_name='Музыкальный инструмент')
+    product = models.ManyToManyField('Tool', through='Pos_order', verbose_name='Строительный инструмент')
 
     def fio_customer(self):
         return f"{self.customer_firstname} {self.customer_name} {self.customer_patronymic}"
@@ -97,7 +97,7 @@ class Order(models.Model):
 
 class Pos_order(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT, verbose_name='Заказ')
-    product = models.ForeignKey('MusicInstrument', on_delete=models.PROTECT, verbose_name='Музыкальный инструмента')
+    product = models.ForeignKey('Tool', on_delete=models.PROTECT, verbose_name='Строительный инструмента')
 
     count = models.PositiveIntegerField(verbose_name='Кол-во')
     discount = models.IntegerField(verbose_name='Скидка на позицию')
@@ -123,7 +123,7 @@ class Parametr(models.Model):
 
 class Pos_parametr(models.Model):
     parametr = models.ForeignKey(Parametr, on_delete=models.PROTECT, verbose_name='Характеристика')
-    product = models.ForeignKey('MusicInstrument', on_delete=models.PROTECT, verbose_name='Книга')
+    product = models.ForeignKey('Tool', on_delete=models.PROTECT, verbose_name='Строительный инструмент')
 
     value = models.CharField(max_length=MAX_LENGTH_CHARFIELD, verbose_name='Значение характеристики')
 
@@ -155,11 +155,11 @@ class Brand(models.Model):
         return f"{self.name}"
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренд'
 
 
-class MusicInstrument(models.Model):
+class Tool(models.Model):
     name = models.CharField(max_length=MAX_LENGTH_CHARFIELD, verbose_name='Название')
     description = models.TextField(blank=True, verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, default=500, verbose_name='Цена')
@@ -176,5 +176,5 @@ class MusicInstrument(models.Model):
         return f"{self.name}"
 
     class Meta:
-        verbose_name = 'Музыкальный инструмент'
-        verbose_name_plural = 'Музыкальный инструмент'
+        verbose_name = 'Строительный инструмент'
+        verbose_name_plural = 'Строительный инструмент'
